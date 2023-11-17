@@ -1,68 +1,65 @@
 import streamlit as st
 from langchain.prompts import PromptTemplate
 from langchain.llms import CTransformers
+import PyPDF2 
 
 #Function to get the response back
-def getLLMResponse(form_input,skills,experience,statement_style):
-
-    # Wrapper for Llama-2-7B-Chat, Running Llama 2 on CPU
-
-    #Quantization is reducing model precision by converting weights from 16-bit floats to 8-bit integers, 
-    #enabling efficient deployment on resource-limited devices, reducing model size, and maintaining performance.
-
-    #C Transformers offers support for various open-source models, 
-    #among them popular ones like Llama, GPT4All-J, MPT, and Falcon.
-
-
-    #C Transformers is the Python library that provides bindings for transformer models implemented in C/C++ using the GGML library
-
+def getLLMResponse(form_input,resume_content,statement_style):
+    print("Initializing LLM\n")
     llm = CTransformers(model='models/llama-2-7b-chat.ggmlv3.q8_0.bin',     #https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGML/tree/main
                     model_type='llama',
                     config={'max_new_tokens': 55,
-                            'temperature': 0.01})
-    
+                            'temperature': 0.01,
+                            'context_length': 1000},)
     
     #Template for building the PROMPT
-    #{project_role} {skills} {experience} {style}
+    #(form_input,resume_content, statement_style)
     template = """
-    Summarize the following skills and experience to provide a statement of interest for a role as  a {project_role}.\n Skills: {skills}\n Experience: {experience}\n\n Constraints: Keep the statement of interest to under 250 words and use a {style} style.
+    Resume: {resume_content}
+Job Description: {form_input}
+Statement of Interest: Generate a compelling statement of interest for the position in under 255 characters, highlighting the most relevant experience and a heavy focus on skills from the resume that align with the requirements of the job description in a {statement_style} style.
     """
 
     #Creating the final PROMPT
     prompt = PromptTemplate(
-    input_variables=["style","project_role","skills","experience"],
+    input_variables=["style","form_input","resume_content"],
     template=template,)
 
-  
     #Generating the response using LLM
-    response=llm(prompt.format(project_role=form_input,skills=skills,experience=experience,style=statement_style))
+    print("Generating response\n")
+    response=llm(prompt.format(form_input=form_input, resume_content=resume_content, statement_style=statement_style))
     print(response)
 
     return response
 
-
+print("Starting Streamlit Construction\n---\n")
 st.set_page_config(page_title="Generate Statement of Interest",
                     page_icon='🤝',
                     layout='centered',
                     initial_sidebar_state='collapsed')
 st.header("Generate Statement of Interest 🤝")
 
-form_input = st.text_area('Enter the project role', height=50)
+form_input = st.text_area('Enter the project description', height=50)
 
-#Creating columns for the UI - To receive inputs from user
-col1, col2, col3 = st.columns([10, 10, 5])
-with col1:
-    skills = st.text_input('Top 3 Skills')
-with col2:
-    experience = st.text_input('Relevant Experience')
-with col3:
-    statement_style = st.selectbox('Writing Style',
+uploaded_file = st.file_uploader("Choose a file", type="pdf")
+
+statement_style = st.selectbox('Writing Style',
                                     ('Neutral', 'Excited', 'Braggadocious'),
                                        index=0)
 
-
 submit = st.button("Generate")
 
-#When 'Generate' button is clicked, execute the below code
+# When 'Generate' button is clicked, execute the below code
 if submit:
-    st.write(getLLMResponse(form_input,skills,experience,statement_style))
+    if uploaded_file is not None:
+                # Read the PDF file
+        pdf_reader = PyPDF2.PdfReader(uploaded_file)
+        # Extract the content
+        resume_content = ""
+        for page in range(len(pdf_reader.pages)):
+            resume_content += pdf_reader.pages[page].extract_text()
+        print("Document Read\n")
+        # Display the content (for bug testing)
+        #st.write(resume_content)
+        #st.write(print("Starting LLM Response"))
+        st.write(getLLMResponse(form_input,resume_content, statement_style))
