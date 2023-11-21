@@ -1,0 +1,30 @@
+For testing, the following "Project descriptions" are used with the example resumes to return an industry-specific response. 
+
+
+Accountant:
+We are seeking a skilled and experienced accountant to join our growing team. The ideal candidate will have a bachelor's degree in accounting, 3+ years of experience, and strong knowledge of accounting principles and practices.
+
+
+
+Data Scientist:
+	Qualifications:
+
+Degree in data science, computer science, statistics, or a related field
+3+ years of experience in data science or a related field
+Proven experience in collecting, cleaning, and analyzing large datasets
+Strong understanding of statistical methods and machine learning algorithms
+Experience with programming languages such as Python, R, or SQL
+Experience with cloud-based data platforms such as AWS or Azure
+Excellent communication and presentation skills
+	Responsibilities:
+
+Collect, clean, and analyze large datasets of medical billing data
+Identify trends, patterns, and insights that can be used to optimize billing processes
+Develop machine learning models to automate tasks and improve efficiency
+Collaborate with our team of developers to integrate machine learning models into our billing systems
+Present findings to management and stakeholders
+
+
+
+Android Developer:
+Seeking a skilled and experienced Android Developer to join their team and help them build the next generation of fintech applications. The ideal candidate will have 3+ years of experience developing Android applications, a strong understanding of Android development principles and best practices, proficiency in Kotlin and Java, experience with Android Studio and Gradle, familiarity with RESTful APIs and JSON, and excellent problem-solving and communication skills. In return, the candidate will receive a competitive salary and benefits package, the opportunity to work on cutting-edge technology, the chance to make a real impact on the world, and a collaborative and supportive work environment.

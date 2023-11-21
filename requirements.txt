@@ -1,7 +1,3 @@
-sentence-transformers
-uvicorn
-ctransformers
-fastapi
-ipykernel
+streamlit
 langchain
-python-box
+PyPDF2
