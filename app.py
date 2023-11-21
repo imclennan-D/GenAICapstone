@@ -8,17 +8,19 @@ def getLLMResponse(form_input,resume_content,statement_style):
     print("Initializing LLM\n")
     llm = CTransformers(model='models/llama-2-7b-chat.ggmlv3.q8_0.bin',     #https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGML/tree/main
                     model_type='llama',
-                    config={'max_new_tokens': 55,
+                    config={'max_new_tokens': 200,
                             'temperature': 0.01,
-                            'context_length': 1000},)
+                            'context_length': 2000},)
     
     #Template for building the PROMPT
     #(form_input,resume_content, statement_style)
-    template = """
-    Resume: {resume_content}
+    template = """Please write a personal statement tailored to the position described below, using the candidate's resume (listed below) to identify relevant skills and experiences in 2-4 sentences. Maintain a tone consistent with a {statement_style} style. Return only the personal statement.
+
 Job Description: {form_input}
-Statement of Interest: Generate a compelling statement of interest for the position in under 255 characters, highlighting the most relevant experience and a heavy focus on skills from the resume that align with the requirements of the job description in a {statement_style} style.
-    """
+
+Resume: {resume_content}
+
+Personal Statement:"""
 
     #Creating the final PROMPT
     prompt = PromptTemplate(
@@ -26,7 +28,7 @@ Statement of Interest: Generate a compelling statement of interest for the posit
     template=template,)
 
     #Generating the response using LLM
-    print("Generating response\n")
+    print("Generating response\n(This may take a while...)\n")
     response=llm(prompt.format(form_input=form_input, resume_content=resume_content, statement_style=statement_style))
     print(response)
 
